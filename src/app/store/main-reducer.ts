@@ -48,7 +48,7 @@ export function mainAppStoreReducer(
     }
 
     case actions.LOGOUT: {
-      return Object.assign({}, state, { loading: true });
+      return Object.assign({}, state, { loading: true, authChecked: false });
     }
 
     case actions.LOGOUT_SUCCESS: {
@@ -200,4 +200,9 @@ export const selectState = (state) => state.app;
 export const selectUser = createSelector(
   selectState,
   (state: AppState) => state.currentUser
+);
+
+export const selectData = createSelector(
+  selectState,
+  (state: AppState) => state.dataArray
 );

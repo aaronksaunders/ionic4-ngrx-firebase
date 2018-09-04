@@ -22,8 +22,8 @@
     </ion-row>
   </ion-grid>
   <!-- if we have checked auth and still dont have a user then show login information -->
-  <div *ngIf="(storeInfo | async)?.authChecked && !(storeInfo | async)?.currentUser">
-    <form #loginForm="ngForm" novalidate>
+  <div *ngIf="(storeInfo | async)?.authChecked" [hidden]="(cu$ | async)?.uid">
+    <form #loginForm="ngForm" novalidate >
       <ion-item>
         <ion-label floating color="primary">Username</ion-label>
         <ion-input [(ngModel)]="credentials.email" name="email" type="text"
@@ -59,9 +59,19 @@
 
     </form>
   </div>
-  <div>
+  <div *ngIf="(cu$ | async)?.uid">
     <ion-button (click)="doCreateObject()" color="primary" block>
       Create Object
     </ion-button>
+    <ion-button (click)="doLogout()" color="primary" block>
+      LOGOUT
+    </ion-button>
+    <ion-list>
+      <ion-item *ngFor="let item of (data$ | async) ">
+        <ion-label text-wrap>
+          <pre>{{item | json }}</pre>
+        </ion-label>
+      </ion-item>
+    </ion-list>
   </div>
 </ion-content>

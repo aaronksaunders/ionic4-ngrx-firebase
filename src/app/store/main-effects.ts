@@ -10,10 +10,6 @@ import { catchError, map, mergeMap, tap, switchMap } from "rxjs/operators";
 import { Action } from "@ngrx/store";
 import API from "./firestore-services";
 
-// import { AngularFireDatabase } from "angularfire2/database";
-// import { AngularFireAuth } from "angularfire2/auth";
-//import { map } from 'rxjs/operator/map';
-
 @Injectable()
 export class MainEffects {
   constructor(
@@ -33,10 +29,26 @@ export class MainEffects {
       return from(API.auth({ email, password })).pipe(
         map((authData: any) => {
           if (authData && authData.error) throw authData.error;
-          return { type: actions.LOGIN_SUCCESS, payload: authData };
+          return { type: actions.LOGIN_SUCCESS, payload: authData.user };
         }),
         catchError(err =>
           of({ type: actions.LOGIN_FAILED, payload: err.message })
+        )
+      );
+    })
+  );
+
+  @Effect()
+  logOut: Observable<Action> = this.action$.ofType(actions.LOGOUT).pipe(
+    //map((action: any) => ({ ...action.payload })),
+    switchMap(() => {
+      return from(API.signOut()).pipe(
+        map((authData: any) => {
+          if (authData && authData.error) throw authData.error;
+          return { type: actions.LOGOUT_SUCCESS, payload: authData };
+        }),
+        catchError(err =>
+          of({ type: actions.LOGOUT_FAILED, payload: err.message })
         )
       );
     })
@@ -69,7 +81,6 @@ export class MainEffects {
       switchMap(({ objectData, objectType }) => {
         return from(API.addObject(objectType, objectData)).pipe(
           map((_result: any) => {
-            debugger;
             return {
               type: actions.CREATE_FIREBASE_OBJECT_SUCCESS,
               payload: { ...objectData, id: _result.id }
@@ -136,25 +147,6 @@ export class MainEffects {
   );
 
   // @Effect()
-  // checkAuth$ = this.action$
-  //   .ofType(actions.CHECK_AUTH)
-  //   .do(action => console.log(`Received ${action.type}`))
-  //   .switchMap(() => this.auth$.authState)
-  //   .map(_result => {
-  //     debugger;
-  //     if (_result) {
-  //       console.log("in auth subscribe", _result);
-  //       return { type: actions.CHECK_AUTH_SUCCESS, payload: _result };
-  //     } else {
-  //       console.log("in auth subscribe - no user", _result);
-  //       return { type: actions.CHECK_AUTH_NO_USER, payload: null };
-  //     }
-  //   })
-  //   .catch((res: any) =>
-  //     Observable.of({ type: actions.CHECK_AUTH_FAILED, payload: res })
-  //   );
-
-  // @Effect()
   // logout$ = this.action$
   //   .ofType(actions.LOGOUT)
   //   .do(action => console.log(`Received ${action.type}`))
@@ -176,7 +168,6 @@ export class MainEffects {
   //     return this.doDeleteFirebaseObject(payload);
   //   })
   //   .map(({ $key }) => {
-  //     debugger;
   //     return {
   //       type: actions.DELETE_FIREBASE_OBJECT_SUCCESS,
   //       payload: { $key }
