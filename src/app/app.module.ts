@@ -18,11 +18,14 @@ import { mainAppStoreReducer } from '../app/store/main-reducer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from "@ngrx/effects";
 import { MainEffects } from "./store/main-effects";
+import { AddTaskModalComponent } from './add-task-modal/add-task-modal.component';
 
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, AddTaskModalComponent],
+  entryComponents: [
+    AddTaskModalComponent
+  ],
   imports: [
     FormsModule,
     ReactiveFormsModule,

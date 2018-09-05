@@ -60,9 +60,6 @@
     </form>
   </div>
   <div *ngIf="(cu$ | async)?.uid">
-    <ion-button (click)="doCreateObject()" color="primary" block>
-      Create Object
-    </ion-button>
     <ion-button (click)="doLogout()" color="primary" block>
       LOGOUT
     </ion-button>
@@ -70,6 +67,7 @@
       <ion-item *ngFor="let item of (data$ | async) ">
         <ion-label text-wrap>
           <pre>{{item | json }}</pre>
+          <ion-button color="danger" (click)="doDeleteObject(item)">DELETE</ion-button>
         </ion-label>
       </ion-item>
     </ion-list>

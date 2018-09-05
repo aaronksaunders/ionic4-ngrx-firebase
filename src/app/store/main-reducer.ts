@@ -15,6 +15,7 @@ export interface AppState {
   error?: any;
   dataArray?: Array<any>;
   dataObject?: Object;
+  lastAction?: String;
 }
 
 export function mainAppStoreReducer(
@@ -22,6 +23,10 @@ export function mainAppStoreReducer(
   action: any
 ) {
   switch (action.type) {
+    case actions.CLEAR_SUCCESS_ACTION: {
+      return { ...state, lastAction: null };
+    }
+
     case actions.LOGIN: {
       return Object.assign({}, state, {
         currentCreds: action.payload,
@@ -100,7 +105,8 @@ export function mainAppStoreReducer(
       return Object.assign({}, state, {
         currentUser: action.payload,
         authChecked: true,
-        loading: false
+        loading: false,
+        lastAction: action.type
       });
     }
     case actions.CREATE_USER_FAILED: {
@@ -120,7 +126,8 @@ export function mainAppStoreReducer(
     case actions.GET_FIREBASE_ARRAY_SUCCESS: {
       return Object.assign({}, state, {
         dataArray: action.payload,
-        loading: false
+        loading: false,
+        lastAction: action.type
       });
     }
     case actions.GET_FIREBASE_ARRAY_FAILED: {
@@ -138,7 +145,8 @@ export function mainAppStoreReducer(
     case actions.GET_FIREBASE_OBJECT_SUCCESS: {
       return Object.assign({}, state, {
         dataObject: action.payload,
-        loading: false
+        loading: false,
+        lastAction: action.type
       });
     }
     case actions.GET_FIREBASE_OBJECT_FAILED: {
@@ -159,7 +167,8 @@ export function mainAppStoreReducer(
       state.dataArray = [...state.dataArray, action.payload];
       return Object.assign({}, state, {
         dataObject: action.payload,
-        loading: false
+        loading: false,
+        lastAction: action.type
       });
     }
     case actions.CREATE_FIREBASE_OBJECT_FAILED: {
@@ -175,12 +184,13 @@ export function mainAppStoreReducer(
     }
     case actions.DELETE_FIREBASE_OBJECT_SUCCESS: {
       let dataArray = state.dataArray.filter(i => {
-        return i.id !== action.payload.id;
+        return i.id !== action.payload.objectId;
       });
       return Object.assign({}, state, {
         dataArray,
         dataObject: null,
-        loading: false
+        loading: false,
+        lastAction: action.type
       });
     }
     case actions.DELETE_FIREBASE_OBJECT_FAILED: {
@@ -196,13 +206,28 @@ export function mainAppStoreReducer(
   }
 }
 
-export const selectState = (state) => state.app;
+export const selectState = state => state.app;
+
+// get current user
 export const selectUser = createSelector(
   selectState,
   (state: AppState) => state.currentUser
 );
 
+// get data
 export const selectData = createSelector(
   selectState,
   (state: AppState) => state.dataArray
+);
+
+// get success from data CRUD action
+export const selectDataAction = createSelector(
+  selectState,
+  (state: AppState) => {
+    return {
+      action: state.lastAction,
+      dataArray: state.dataArray,
+      data: state.dataObject
+    };
+  }
 );

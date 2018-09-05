@@ -65,7 +65,6 @@ export default {
       });
   },
 
-
   createUser: ({ email, password }) => {
     return firebase
       .auth()
@@ -121,5 +120,12 @@ export default {
 
   fetchObjects: _type => {
     return db.collection(_type).get();
+  },
+
+  removeObject: (_type, _id) => {
+    return db
+      .collection(_type)
+      .doc(_id)
+      .delete();
   }
 };

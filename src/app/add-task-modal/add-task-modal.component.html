@@ -1,0 +1,27 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>Super Modal</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen padding>
+  <h1>Task Entry</h1>
+  <ion-item>
+    <ion-label position="floating">Floating Label</ion-label>
+    <ion-input [(ngModel)]="task.name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Floating Label</ion-label>
+    <ion-input [(ngModel)]="task.description"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Action Sheet</ion-label>
+    <ion-select [interfaceOptions]="customActionSheetOptions" interface="action-sheet"
+      placeholder="Select One" [(ngModel)]="task.loe">
+      <ion-select-option value="HIGH">HIGH</ion-select-option>
+      <ion-select-option value="MEDIUM">MEDIUM</ion-select-option>
+      <ion-select-option value="LOW">LOW</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-button (click)="dismissModal()">SAVE</ion-button>
+  <ion-button (click)="cancelModal()">CANCEL</ion-button>
+</ion-content>

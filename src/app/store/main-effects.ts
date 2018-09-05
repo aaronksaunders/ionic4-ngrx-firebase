@@ -97,6 +97,32 @@ export class MainEffects {
     );
 
   @Effect()
+  deleteFBObject$: Observable<Action> = this.action$
+    // Listen for the 'DELETE_FIREBASE_OBJECT' action
+    .ofType(actions.DELETE_FIREBASE_OBJECT)
+    .pipe(
+      map((action: any) => ({ ...action.payload })),
+      switchMap(({ objectId, objectType }) => {
+        let lastId = objectId; // save to pass to success...
+        return from(API.removeObject(objectType, objectId)).pipe(
+          map((_result: any) => {
+            debugger;
+            return {
+              type: actions.DELETE_FIREBASE_OBJECT_SUCCESS,
+              payload: { objectId: lastId }
+            };
+          }),
+          catchError(err =>
+            of({
+              type: actions.DELETE_FIREBASE_OBJECT_FAILED,
+              payload: err.message
+            })
+          )
+        );
+      })
+    );
+
+  @Effect()
   getFBArray$: Observable<Action> = this.action$
     // Listen for the 'GET_FIREBASE_ARRAY' action
     .ofType(actions.GET_FIREBASE_ARRAY)
