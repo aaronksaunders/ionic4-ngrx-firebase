@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { ModalController } from "@ionic/angular";
 
 @Component({
@@ -13,10 +13,13 @@ export class AddTaskModalComponent implements OnInit {
   };
 
   task = {};
+  value: any;
 
   constructor(public modalController: ModalController) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.value);
+  }
 
   dismissModal() {
     this.modalController.dismiss({ ...this.task });

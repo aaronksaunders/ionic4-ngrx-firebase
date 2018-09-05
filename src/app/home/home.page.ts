@@ -136,7 +136,7 @@ export class HomePage {
   async presentModal() {
     const modal = await this.modalController.create({
       component: AddTaskModalComponent,
-      componentProps: { value: 123 }
+      componentProps: { value: 123, next : 'foo' }
     });
     modal.onDidDismiss().then((d: any) => this.handleModalDismiss(d));
     return await modal.present();
