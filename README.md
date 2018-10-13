@@ -1,8 +1,5 @@
 # Ionic4 Firebase Firestore w/ state management using ngrx
-
-> I am updating the original project https://github.com/aaronksaunders/ionic3-ngrx4-angularfire so this is still a work in progress
-
-
+ > Should be complete
 ## A basic application for Ionic 4 
 
 - Login with email address & password
